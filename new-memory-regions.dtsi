@@ -30,7 +30,9 @@
 
 #include "new.dtsh"
 
+#define DK_NEW_MEM
 #define DK
+#define HPSC
 
 #define SECURE 1
 #define NON_SECURE 0
@@ -112,6 +114,35 @@ NAME ## _memattr: NAME ## _ma {						\
 		container = <&amba>;
 	};
 
+#ifdef DK_NEW_MEM
+	ddr0_high_ram: memory@100000000 {
+		compatible = "qemu:memory-region";
+		device_type = "memory";
+		container = <&amba>;
+	};
+
+	ddr1_high_ram: memory@300000000 {
+		compatible = "qemu:memory-region";
+		device_type = "memory";
+		container = <&amba>;
+	};
+
+#endif
+
+#ifdef HPSC
+	ddr0_high_ram: memory@100000000 {
+		compatible = "qemu:memory-region";
+		device_type = "memory";
+		container = <&amba>;
+	};
+
+	ddr1_high_ram: memory@300000000 {
+		compatible = "qemu:memory-region";
+		device_type = "memory";
+		container = <&amba>;
+	};
+
+#endif
 	pmu_ram: pmu_ram@0{
 /*		#address-cells = <MEMORY_ADDRESS_CELLS>; */ /* DK: works without this line */
 		#size-cells = <2>;

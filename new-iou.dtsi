@@ -55,52 +55,52 @@ name: name@0 {									\
 };
 
 #define ZDMA_CHANNEL(zname, zdomain, zbase, zirq, zbuswidth, zdma, mid)	\
-zname ## _mr: zname ## mr{												\
-	#address-cells = <MEMORY_ADDRESS_CELLS>;							\
-	#size-cells = <1>;													\
-	compatible = "simple-bus";											\
-	ranges ;															\
-};																		\
-																		\
-zname ## _mattr: zname ## mattr {										\
-	compatible = "qemu:memory-transaction-attr";						\
-	secure = <0>;														\
-	master-id = <mid>;													\
-};																		\
-																		\
-zname: zname@zbase {													\
-	compatible = "xlnx,zdma";											\
-	reg = <BASE_ADDR(zbase) 0x1000>;									\
-	bus-width = <zbuswidth>;											\
-	interrupts = <zirq>;												\
-	#stream-id-cells = <0x1>;											\
-	dma = <zdma>;														\
-	memattr = <& ## zname ## _mattr>;									\
+zname ## _mr: zname ## mr{						\
+	#address-cells = <MEMORY_ADDRESS_CELLS>;			\
+	#size-cells = <1>;						\
+	compatible = "simple-bus";					\
+	ranges ;							\
+};									\
+									\
+zname ## _mattr: zname ## mattr {					\
+	compatible = "qemu:memory-transaction-attr";			\
+	secure = <0>;							\
+	master-id = <mid>;						\
+};									\
+									\
+zname: zname@zbase {							\
+	compatible = "xlnx,zdma";					\
+	reg = <BASE_ADDR(zbase) 0x1000>;				\
+	bus-width = <zbuswidth>;					\
+	interrupts = <zirq>;						\
+	#stream-id-cells = <0x1>;					\
+	dma = <zdma>;							\
+	memattr = <& ## zname ## _mattr>;				\
 }
 
 #define I2C_CLOCKS &misc_clk
 
 #define I2C_NODES(name, addressbase, irq, eeprom_addr)			\
-name: name@addressbase {												\
-	clocks = <I2C_CLOCKS>;												\
-	compatible = "xlnx,ps7-i2c-1.00.a", "cdns,i2c-r1p10";				\
-	interrupts = <irq>;													\
-	reg = <BASE_ADDR(addressbase) 0x1000>;								\
-	#address-cells = <1>;												\
-	#size-cells = <0>;													\
-	eeprom@54 {															\
-		compatible = "at,24c64";										\
-		reg = <eeprom_addr>;											\
-		size = <0x2000>;												\
-	};																	\
+name: name@addressbase {						\
+	clocks = <I2C_CLOCKS>;						\
+	compatible = "xlnx,ps7-i2c-1.00.a", "cdns,i2c-r1p10";		\
+	interrupts = <irq>;						\
+	reg = <BASE_ADDR(addressbase) 0x1000>;				\
+	#address-cells = <1>;						\
+	#size-cells = <0>;						\
+	eeprom@54 {							\
+		compatible = "at,24c64";				\
+		reg = <eeprom_addr>;					\
+		size = <0x2000>;					\
+	};								\
 };
 
-#define OCM_MEM_CTRL(n, hlt_line, pwr_line)								\
-glue(ocm_mem_ctrl_, n): glue(ocm_mem_ctrl_, n)@n {						\
-	compatible = "qemu,memory-controller";								\
-	mr = <glue(&ocm_ram_bank_, n)>;										\
-	gpios = <&pmu_local hlt_line &pmu_local pwr_line>;					\
-	gpio-names = "hlt_cntrl", "pwr_cntrl";								\
+#define OCM_MEM_CTRL(n, hlt_line, pwr_line)				\
+glue(ocm_mem_ctrl_, n): glue(ocm_mem_ctrl_, n)@n {			\
+	compatible = "qemu,memory-controller";				\
+	mr = <glue(&ocm_ram_bank_, n)>;					\
+	gpios = <&pmu_local hlt_line &pmu_local pwr_line>;		\
+	gpio-names = "hlt_cntrl", "pwr_cntrl";				\
 };
 
 / {

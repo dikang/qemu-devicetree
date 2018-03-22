@@ -30,6 +30,8 @@
 
 #include "new.dtsh"
 
+//#define DK_M4_GIC
+#define DK_NEW_MEM
 #define V2_11
 #define DK3	/* mp_affinity of RPUs are moved to 0x20x ranges : no changes in behavior */
 #define DK_2
@@ -139,6 +141,12 @@
 	#address-cells = <MEMORY_ADDRESS_CELLS>;
 	#size-cells = <1>;
 
+#ifdef DK_NEW_MEM
+	MEM_REGION(ddr_bank1_2, 0x0, 0x00000000,  0x80000000, 0x80000000, &ddr3_ram)
+	MEM_REGION(ddr_bank3, 0x8, 0x00000000, 0x800000000, 0x80000000, &ddr3_ram)
+	MEM_SPEC(ddr_bank4, 0x1, 0x00000000, 0x100000000, 0x2, 0x00000000, &ddr0_high_ram)
+	MEM_SPEC(ddr_bank5, 0x3, 0x00000000, 0x300000000, 0x2, 0x00000000, &ddr1_high_ram)
+#else	// old working version
 	MEM_REGION(ddr_bank1_1, 0x0, 0x0, 0x0, 0x30000, &ddr3_ram)
 	MEM_REGION(ddr_bank1_2, 0x0, 0x30000, 0x30000, 0x10000, &ddr3_ram)
 	MEM_REGION(ddr_bank1_3, 0x0, 0x40000, 0x40000, 0x3FFC0000, &ddr3_ram)
@@ -147,6 +155,7 @@
 	MEM_REGION(ddr_bank3, 0x8, 0x00000000, 0x800000000, 0x80000000, &ddr3_ram)
 #else
 	MEM_SPEC(ddr_bank3, 0x8, 0x00000000, 0x800000000, 0x8, 0x00000000, &ddr3_ram)
+#endif
 #endif
 
 
@@ -164,7 +173,12 @@
 			#define __intc__ &rpu_gic
 			#include "new-irq-map.dtsh"
 			#undef __intc__
-
+#ifdef DK_M4_GIC
+			,
+			#define __intc__ &amba_pmu_gic
+			#include "new-irq-map.dtsh"
+			#undef __intc__
+#endif
 			;
 
 #ifdef DK2
@@ -668,22 +682,20 @@
 	};
 
 	amba_pmu: amba_pmu@0 {
-#ifdef KEEP 
-		amba_pmu_gic: interrupt-controller@R5_GIC_DIST {
+#ifdef DK_M4_GIC
+		amba_pmu_gic: interrupt-controller@M4_GIC{
 			#address-cells = <0>;
 			#interrupt-cells = <3>;
 			#size-cells = <0>;
-			compatible = "xlnx,zynqmp-scugic", "arm,gic";
-/*			compatible = "xlnx,zynqmp-scugic", "armv7m-nvic"; */
-			reg = <	BASE_ADDR(R5_GIC_DIST) 0x0 0x1000 0x0
-					BASE_ADDR(R5_GIC) 0x0 0x100 0x0>;
+			compatible = "armv7m_nvic";
+			reg = <	BASE_ADDR(M4_GIC) 0x0 0x1000 0x0>;
+/*					BASE_ADDR(M4_GIC) 0x0 0x100 0x0>; */
 			status = "disabled";
 			interrupt-controller ;
 			num-irq = <256>;
-			num-cpu = <2>;
+			num-cpu = <1>;
 			interrupts-extended =
-				<&rpu_cpu0 0>,
-				<&rpu_cpu1 0>;
+				<&pmu_cpu0 0>;
 		};
 #endif
 

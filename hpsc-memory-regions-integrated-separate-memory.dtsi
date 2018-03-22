@@ -112,7 +112,7 @@ NAME ## _memattr: NAME ## _ma {						\
 	};
 
 	pmu_ram: pmu_ram@0{
-		#address-cells = <MEMORY_ADDRESS_CELLS>;
+/*		#address-cells = <MEMORY_ADDRESS_CELLS>; */ /* DK: works without this line */
 		#size-cells = <2>;
 		#priority-cells = <1>;
 		compatible = "qemu:memory-region";
@@ -192,7 +192,7 @@ NAME ## _memattr: NAME ## _ma {						\
 //			reg = <BASE_ADDR(0x0) 0x0 0x20000 0x1>;
 //		};
 //	};
-
+/*
 	amba_pmu: amba_pmu@0 {
 		#address-cells = <MEMORY_ADDRESS_CELLS>;
 		#size-cells = <2>;
@@ -212,7 +212,7 @@ NAME ## _memattr: NAME ## _ma {						\
 //			reg = <BASE_ADDR(0x0) 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF>;
 //		};
 	};
-
+*/
 
 	tcm_cache_rpu0: tcm_cache_rpu0@0 {
 		#address-cells = <MEMORY_ADDRESS_CELLS>;
