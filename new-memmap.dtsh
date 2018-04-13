@@ -28,8 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//#define DK_M4_GIC
-#define DK
 #define HPSC
 
 #define MEM_REGION(name, addrH, addrL, addr64, s, c)					\
@@ -77,9 +75,7 @@ name: name@addr64 {														\
 #define R5_GIC_DIST			0xF9000000
 #define R5_GIC				0xF9001000
 
-#ifdef DK_M4_GIC
 #define M4_GIC			0xE000E000
-#endif
 
 #define GDMA_0_BASE			0xFD500000
 #define GDMA_1_BASE			0xFD510000
@@ -115,9 +111,7 @@ name: name@addr64 {														\
 #define APM2				0xFFA20000
 #define APM3				0xFFA30000
 #define APU					0xFD5C0000
-#ifdef DK
 #define APU1					0xFD5C1000
-#endif
 #define AXIPCIE_DMA0		0xFD0F0000
 #define AXIPCIE_DMA1		0xFD0F0080
 #define AXIPCIE_DMA2		0xFD0F0100
@@ -183,9 +177,6 @@ name: name@addr64 {														\
 #define IOU_SECURE_SLCR		0xFF240000
 #define IOU_SLCR			0xFF180000
 #define IPI					0xFF300000
-#ifdef DK
-#define IPI1					0xFF380000
-#endif
 #define LPD_GPV				0xFE100000
 #define LPD_SLCR			0xFF410000
 #define LPD_SLCR_SECURE		0xFF4B0000
@@ -200,6 +191,7 @@ name: name@addr64 {														\
 #define QSPI				0xFF0F0000
 #define PMU					0xFF9A8000
 #define RPU					0xFF9A0000
+#define M4				0xFF9A4000
 #define RSA					0xFFCE002C
 #define RSA_CORE			0xFFCE0000
 #define RTC					0xFFA60000
@@ -225,8 +217,8 @@ name: name@addr64 {														\
 #define TTC3				0xFF140000
 #define UART0				0xFF000000
 #ifdef HPSC
-#define UART1				0xA0001000
-#define UART2				0xA0002000
+#define UART1				0xFF010000
+#define UART2				0xA0001000
 #else
 #define UART1				0xFF010000
 #endif

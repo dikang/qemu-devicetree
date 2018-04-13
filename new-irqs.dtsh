@@ -28,8 +28,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define DK_DEF
-
+#define HPSC
+				/* actual IRQ # is (irq_no + 32) */
 #define RPU0_PERF_MON_IRQ_0			8
 #define RPU1_PERF_MON_IRQ_0			9
 #define OCMINTR_IRQ_0				10
@@ -56,7 +56,7 @@
 #define I2C1_IRQ_0					18
 #define SPI0_IRQ_0					19
 #define SPI1_IRQ_0					20
-#define UART0_IRQ_0					21
+#define UART0_IRQ_0					21	/* + 32 ==> 53 */
 #define UART1_IRQ_0					22
 #define CAN0_IRQ_0					23
 #define CAN1_IRQ_0					24
@@ -72,6 +72,7 @@
 #define RPU_IPI0_IRQ_0				33
 #define RPU_IPI1_IRQ_0				34
 #define APU_IPI0_IRQ_0				35
+#define TRCH_IPI0_IRQ_0				156
 #define TTC0_IRQ_0					36
 #define TTC0_IRQ_1					37
 #define TTC0_IRQ_2					38
@@ -126,7 +127,7 @@
 #define EFUSE_IRQ_0					87
 #define XMPU_OCM_IRQ_0				88
 #define XMPU_SWITCH_IRQ_0			88
-/* DK: PL_PS IRQs are not used by HPSC */
+/* PL_PS IRQs are not used by HPSC */
 #define PL_PS_GRP0_IRQ_0			89
 #define PL_PS_GRP0_IRQ_1			90
 #define PL_PS_GRP0_IRQ_2			91
@@ -187,7 +188,7 @@
 #define APU_CPUMNT_IRQ_1			136
 #define APU_CPUMNT_IRQ_2			137
 #define APU_CPUMNT_IRQ_3			138
-#ifdef DK_DEF
+#ifdef HPSC
 #define APU_CPUMNT_IRQ_4		157
 #define APU_CPUMNT_IRQ_5		158
 #define APU_CPUMNT_IRQ_6		159

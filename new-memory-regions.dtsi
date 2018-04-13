@@ -30,8 +30,8 @@
 
 #include "new.dtsh"
 
-#define DK_NEW_MEM
-#define DK
+#define HPSC_NVIC 
+#define HPSC_NEW_MEM
 #define HPSC
 
 #define SECURE 1
@@ -55,7 +55,6 @@ NAME ## _memattr: NAME ## _ma {						\
 	MEMATTR(apu2_ns, NON_SECURE, 0x8e);
 	MEMATTR(apu3_s, SECURE, 0x8f);
 	MEMATTR(apu3_ns, NON_SECURE, 0x8f);
-#ifdef DK
 	MEMATTR(apu4_s, SECURE, 0x90);
 	MEMATTR(apu4_ns, NON_SECURE, 0x90);
 	MEMATTR(apu5_s, SECURE, 0x9d);
@@ -64,11 +63,13 @@ NAME ## _memattr: NAME ## _ma {						\
 	MEMATTR(apu6_ns, NON_SECURE, 0x9e);
 	MEMATTR(apu7_s, SECURE, 0x9f);
 	MEMATTR(apu7_ns, NON_SECURE, 0x9f);
-#endif
 
 	MEMATTR(rpu0, SECURE, 0x2e);
 	MEMATTR(rpu1, SECURE, 0x2f);
 
+#ifdef HPSC_NVIC
+	MEMATTR(trch, SECURE, 0x2d);
+#endif
 	MEMATTR(gem0, NON_SECURE, 0x874);
 	MEMATTR(gem1, NON_SECURE, 0x875);
 	MEMATTR(gem2, NON_SECURE, 0x876);
@@ -114,7 +115,7 @@ NAME ## _memattr: NAME ## _ma {						\
 		container = <&amba>;
 	};
 
-#ifdef DK_NEW_MEM
+#ifdef HPSC_NEW_MEM
 	ddr0_high_ram: memory@100000000 {
 		compatible = "qemu:memory-region";
 		device_type = "memory";
@@ -144,7 +145,7 @@ NAME ## _memattr: NAME ## _ma {						\
 
 #endif
 	pmu_ram: pmu_ram@0{
-/*		#address-cells = <MEMORY_ADDRESS_CELLS>; */ /* DK: works without this line */
+/*		#address-cells = <MEMORY_ADDRESS_CELLS>; */ /* works without this line */
 		#size-cells = <2>;
 		#priority-cells = <1>;
 		compatible = "qemu:memory-region";
@@ -325,29 +326,29 @@ NAME ## _memattr: NAME ## _ma {						\
 		};
 	};
 
-	amba_pmu: amba_pmu@0 {
+	amba_trch: amba_trch@0 {
 		#address-cells = <MEMORY_ADDRESS_CELLS>;
 		#size-cells = <2>;
 		#priority-cells = <1>;
 		compatible = "xlnx,ps7-axi-interconnect-1.00.a", "simple-bus";
 		ranges;
 
-		main_bus_for_pmu {
+		main_bus_for_trch {
 			compatible = "qemu:memory-region";
 			alias = <&amba>;
 			/* Full address range with -1 priority */
 			reg = <0x0 0x0 0xffffffff 0xffffffff 0xffffffff>;
 		};
-
-		ddr_memory_2_for_pmu: ddr_memory_2_for_pmu {
+/*
+		ddr_memory_2_for_trch: ddr_memory_2_for_trch {
 			compatible = "qemu:memory-region";
-			alias = <&pmu_ram_0>;
+			alias = <&ddr_bank1_2>;
 			reg = <BASE_ADDR(0x00000) 0x00000000 0x00100000 0x0>;
 		};
+*/
+		/* ROM. 32K.  also works 
 
-		/* ROM. 32K.  DK: also works 
-
-		ddr_memory_2_for_pmu: ddr_memory_2_for_pmu {
+		ddr_memory_2_for_trch: ddr_memory_2_for_trch {
 			device_type = "memory";
 			reg = <BASE_ADDR(0x0) 0x0 0x00008000 0x1>;
 			compatible = "qemu:memory-region";
