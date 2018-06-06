@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define HPSC
+/* #define HPSC__ */
 
 #define MEM_REGION(name, addrH, addrL, addr64, s, c)					\
 name: name@addr64 {														\
@@ -163,7 +163,7 @@ name: name@addr64 {														\
 #define GEM1				0xFF0C0000
 #define GEM2				0xFF0D0000
 #define GEM3				0xFF0E0000
-#ifdef HPSC
+#ifdef HPSC__
 #define GPIO				0xA0003000
 #else
 #define GPIO				0xFF0A0000
@@ -204,7 +204,7 @@ name: name@addr64 {														\
 #define SIOU				0xFD3D0000
 #define SMMU_GPV			0xFD800000
 #define SMMU_REG			0xFD5F0000
-#ifdef HPSC
+#ifdef HPSC__
 #define SPI0				0xA0005000
 #else
 #define SPI0				0xFF040000
@@ -216,7 +216,7 @@ name: name@addr64 {														\
 #define TTC2				0xFF130000
 #define TTC3				0xFF140000
 #define UART0				0xFF000000
-#ifdef HPSC
+#ifdef HPSC__
 #define UART1				0xFF010000
 #define UART2				0xA0001000
 #else

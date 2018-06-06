@@ -115,21 +115,6 @@ NAME ## _memattr: NAME ## _ma {						\
 		container = <&amba>;
 	};
 
-#ifdef HPSC_NEW_MEM
-	ddr0_high_ram: memory@100000000 {
-		compatible = "qemu:memory-region";
-		device_type = "memory";
-		container = <&amba>;
-	};
-
-	ddr1_high_ram: memory@300000000 {
-		compatible = "qemu:memory-region";
-		device_type = "memory";
-		container = <&amba>;
-	};
-
-#endif
-
 #ifdef HPSC
 	ddr0_high_ram: memory@100000000 {
 		compatible = "qemu:memory-region";
