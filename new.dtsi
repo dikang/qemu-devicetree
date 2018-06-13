@@ -31,6 +31,7 @@
 #include "new.dtsh"
 
 #define HPSC_NVIC
+#define HPSC_NEW_GIC
 #define HPSC_NEW_MEM
 #define HPSC
 
@@ -442,14 +443,21 @@
 			#size-cells = <0>;
 			#interrupt-cells = <3>;
 			#gpio-cells = <0>;
-
-			compatible = "xlnx,zynqmp-scugic", "arm,gic";
+#ifdef HPSC_NEW_GIC
+			compatible = "arm,arm-gicv3";
+			reg = < BASE_ADDR(0xF9000000) 0x20000 0		/* GICD */
+				BASE_ADDR(0xF9100000) 0x100000 0>;	/* GICR */
+			interrupt-controller ;
+			num-irq = <320>;
+#else
+			compatible = "xlnx,zynqmp-scugic", "arm,gic"; 
 			reg = < BASE_ADDR(ACPU_GIC_DIST) 0x1000 0
 					BASE_ADDR(ACPU_GIC) 0x20000 0
 					BASE_ADDR(ACPU_GIC_HYP) 0x20000 0
 					BASE_ADDR(ACPU_GIC_VCPU) 0x20000 0>;
 			interrupt-controller ;
 			num-irq = <192>;
+#endif
 			interrupts-extended =
 	#define GIC_INTERRUPT_TARGET_STEM cpu
 				<&glue(GIC_INTERRUPT_TARGET_STEM, 0) 0>,
@@ -521,9 +529,26 @@
 #else
 			num-cpu = <4>;
 #endif
+#ifdef HPSC_NEW_GIC
+			revision = <3>;
+#else
 			revision = <2>;
+#endif
+#ifdef HPSC_NEW_GIC
+			#redistributor-regions = <1>;
+/*			msi-controller;
+			mbi-ranges = <256 128>; 
+			gicits: gic-its@f9020000 {
+				compatible = "arm,gic-v3-its";
+				msi-controller;
+				#msi-cells = <1>;
+				reg = <BASE_ADDR(0xf9020000) 0x20000 0>;
+			};
+*/
+#else
 			map-stride = <ACPU_GIC_STRIDE>;
 			int-id = <0x0202143B>;
+#endif
 		};
 
 		/* Alias the GIC CPU registers every 4kB over 64kB */
@@ -733,7 +758,7 @@
 		EMIT_IPI_2PARENTS(rpu_0_ipi, 0xFF310000, &gic, &rpu_gic, &amba_trch_nvic, 0 RPU_IPI0_IRQ_0, 8, 40)
 		/* RPU_IPI1_IRQ_0 = 33 --> GICP1[1] "IPIs targeting channel 2 */
 		EMIT_IPI_2PARENTS(rpu_1_ipi, 0xFF320000, &gic, &rpu_gic, &amba_trch_nvic, 0 RPU_IPI1_IRQ_0, 9, 41)
-		EMIT_IPI_2PARENTS(trch_0_ipi, 0xFF380000, &gic, &rpu_gic, &amba_trch_nvic, 0 TRCH_IPI0_IRQ_0, 10, 42)
+		EMIT_IPI_2PARENTS(trch_0_ipi, 0xFF380000, &gic, &rpu_gic, &amba_trch_nvic, 0 TRCH_IPI0_IRQ_0, 10, 42) 
 #else
 		EMIT_IPI_2PARENTS(apu_ipi, 0xFF300000, &gic, &rpu_gic, 0 APU_IPI0_IRQ_0, 0, 32)
 		/* RPU_IPI0_IRQ_0 = 34 --> GICP1[2] "IPIs targeting channel 1 */
@@ -762,7 +787,8 @@
 			compatible = "xlnx,zynqmp-csu-core";
 			reg = <BASE_ADDR(CSU) 0x100>;
 		};
-
+#ifdef HPSC_NEW_GIC
+#else
 		lpd_slcr_0: zynqmp_lpd_slcr@LPD_SLCR {
 			compatible = "xlnx,lpd-slcr";
 			reg = <BASE_ADDR(LPD_SLCR) 0x9000>;
@@ -773,6 +799,7 @@
 			compatible = "xlnx.lpd-slcr-secure";
 			reg = <BASE_ADDR(LPD_SLCR_SECURE) 0x38>;
 		};
+#endif
 	};
 };
 

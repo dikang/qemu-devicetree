@@ -30,6 +30,8 @@
 
 /* #define HPSC__ */
 
+#define HPSC_NEW_MEM
+
 #define MEM_REGION(name, addrH, addrL, addr64, s, c)					\
 name: name@addr64 {														\
 	compatible = "qemu:memory-region";									\
@@ -64,16 +66,32 @@ name: name@addr64 {														\
 #define QSPI_DMA			0xFF0F0800
 
 #define A9_SCU				0xFD3FE000
-#define APU_GIC_DIST		0xFD3FF000
+
 
 #define ACPU_GIC_STRIDE		0x10000
+#ifdef HPSC_NEW_MEM
+#define APU_GIC_DIST		0xFD3FF000
+/* #define APU_GIC_DIST		0xF9000000 */
 #define ACPU_GIC_DIST		0xF9010000
-#define ACPU_GIC			0xF9020000
+#define ACPU_GIC		0xF9020000
 #define ACPU_GIC_HYP		0xF9040000
 #define ACPU_GIC_VCPU		0xF9060000
 
-#define R5_GIC_DIST			0xF9000000
-#define R5_GIC				0xF9001000
+/* DK: temporary */
+#define R5_GIC_DIST		0xF9A00000
+#define R5_GIC			0xF9A01000
+
+#else
+#define APU_GIC_DIST		0xFD3FF000
+
+#define ACPU_GIC_DIST		0xF9010000
+#define ACPU_GIC		0xF9020000
+#define ACPU_GIC_HYP		0xF9040000
+#define ACPU_GIC_VCPU		0xF9060000
+
+#define R5_GIC_DIST		0xF9000000
+#define R5_GIC			0xF9001000
+#endif
 
 #define M4_GIC			0xE000E000
 
