@@ -28,12 +28,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "new.dtsh"
+#include "hpsc.dtsh"
 
 /dts-v1/;
 
-#include "new.dtsi"
-#include "new-memory-regions.dtsi"
+#include "hpsc.dtsi"
+#include "hpsc-memory-regions.dtsi"
 
 / {
 	model = "ZynqMP ZCU102 RevA";

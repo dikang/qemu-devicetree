@@ -28,8 +28,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "new.dtsh"
-#include "new-icnt.dtsi"
+#include "hpsc.dtsh"
+#include "hpsc-icnt.dtsi"
 
 //#define HPSC_NAND
 #define HPSC

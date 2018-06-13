@@ -28,8 +28,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "new-irqs.dtsh"
-#include "new-memmap.dtsh"
+#include "hpsc-irqs.dtsh"
+#include "hpsc-memmap.dtsh"
 
 /* QEMU RAM Settings */
 	#define QEMU_RAM_PROPERTY 1

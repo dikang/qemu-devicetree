@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "new.dtsh"
+#include "hpsc.dtsh"
 
 #define HPSC_NVIC
 #define HPSC_NEW_GIC
@@ -167,17 +167,17 @@
 		interrupt-map-mask = <0x0 0x0 0xffff>;	/* 0 0 (don't know) 0xffff (IRQ#) */
 		interrupt-map =
 			#define __intc__ &gic
-			#include "new-irq-map.dtsh"
+			#include "hpsc-irq-map.dtsh"
 			#undef __intc__
 			,  
 			#define __intc__ &rpu_gic
-			#include "new-irq-map.dtsh"
+			#include "hpsc-irq-map.dtsh"
 			#undef __intc__
 #ifdef HPSC_NVIC
 			,
 
 			#define __intc__ &amba_trch_nvic
-			#include "new-irq-map.dtsh"
+			#include "hpsc-irq-map.dtsh"
 			#undef __intc__
 
 /*			<0 0 UART1_IRQ_0 &amba_trch_nvic 0 UART1_IRQ_0 4> */
@@ -821,7 +821,7 @@
         };
 };
 
-#include "new-iou.dtsi"
+#include "hpsc-iou.dtsi"
 
 &amba_rpu {
 	ddr_memory_2_for_rpu: ddr_memory_2_for_rpu {

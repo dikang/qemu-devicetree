@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "new.dtsh"
+#include "hpsc.dtsh"
 
 #define HPSC_NVIC 
 #define HPSC_NEW_MEM
