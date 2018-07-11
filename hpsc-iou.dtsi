@@ -596,6 +596,11 @@ glue(ocm_mem_ctrl_, n): glue(ocm_mem_ctrl_, n)@n {			\
 			status = "disabled";
 		};
 #endif
+		hpps_mbox: hpps_mbox@HPPS_MBOX {
+			compatible = "hpsc,hpsc-mbox";
+			interrupts = <HPPS_MBOX_IRQ_0 HPPS_MBOX_IRQ_1>;
+			reg = <BASE_ADDR(HPPS_MBOX) 0x80000>;
+		};
 
 		ocm_ctrl0: ocm_ctrl@OCM {
 			compatible = "xlnx,zynqmp-ocmc";

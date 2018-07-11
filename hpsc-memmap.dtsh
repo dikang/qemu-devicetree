@@ -93,6 +93,9 @@ name: name@addr64 {														\
 #define R5_GIC			0xF9001000
 #endif
 
+#define HPPS_MBOX		0xF9240000
+
+
 #define M4_GIC			0xE000E000
 
 #define GDMA_0_BASE			0xFD500000

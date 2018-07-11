@@ -216,7 +216,9 @@
 <__acells__ APU_CPUMNT_IRQ_4 __intc__ 0 APU_CPUMNT_IRQ_4 4>,
 <__acells__ APU_CPUMNT_IRQ_5 __intc__ 0 APU_CPUMNT_IRQ_5 4>,
 <__acells__ APU_CPUMNT_IRQ_6 __intc__ 0 APU_CPUMNT_IRQ_6 4>,
-<__acells__ APU_CPUMNT_IRQ_7 __intc__ 0 APU_CPUMNT_IRQ_7 4>
+<__acells__ APU_CPUMNT_IRQ_7 __intc__ 0 APU_CPUMNT_IRQ_7 4>,
+<__acells__ HPPS_MBOX_IRQ_0 __intc__ 0 HPPS_MBOX_IRQ_0 4>,
+<__acells__ HPPS_MBOX_IRQ_1 __intc__ 0 HPPS_MBOX_IRQ_1 4>
 #else
 <__acells__ 155 __intc__ 0 155 4>
 #endif

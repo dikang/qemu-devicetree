@@ -193,6 +193,8 @@
 #define APU_CPUMNT_IRQ_5		158
 #define APU_CPUMNT_IRQ_6		159
 #define APU_CPUMNT_IRQ_7		160
+#define HPPS_MBOX_IRQ_0			161
+#define HPPS_MBOX_IRQ_1			162
 #endif
 #define APU_CTI_IRQ_0				139
 #define APU_CTI_IRQ_1				140
