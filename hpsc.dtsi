@@ -433,7 +433,7 @@
 			#interrupt-cells = <1>;
 		};
 #ifdef HPSC
-		amba_trch_nvic: interrupt-controller@0xe000e000  {
+		amba_trch_nvic: interrupt-controller@0xe000e000 {
 			#address-cells = <MEMORY_ADDRESS_CELLS>;
 			#size-cells = <1>;
 			compatible = "arm,armv7m_nvic";
@@ -724,13 +724,13 @@
 	};
 
 #ifdef HPSC_NVIC__
-		amba_trch_nvic: interrupt-controller@0xe000e100  {
+		amba_trch_nvic: interrupt-controller@0xe000e000  {
 			#address-cells = <MEMORY_ADDRESS_CELLS>;
 			#size-cells = <1>;
 			compatible = "arm,armv7m_nvic";
 			interrupt-controller;
 			#interrupt-cells = <3>;
-			reg = <0x0 0xe000e100 0xc00>;
+			reg = <0x0 0xe000e000 0x1000>;
 			num-irq = <256>;
 			cpu-id = <10>;
 			container = <&amba>;
@@ -746,13 +746,13 @@
 		compatible = "xlnx,ps7-axi-interconnect-1.00.a", "simple-bus";
 		ranges ;
 #ifdef HPSC_NVIC
-		amba_trch_nvic: interrupt-controller@0xe000e100  {
+		amba_trch_nvic: interrupt-controller@0xe000e000  {
 			#address-cells = <MEMORY_ADDRESS_CELLS>;
 			#size-cells = <1>;
 			compatible = "arm,armv7m_nvic";
 			interrupt-controller;
 			#interrupt-cells = <3>;
-			reg = <0x0 0xe000e100 0xc00>;
+			reg = <0x0 0xe000e000 0x1000>;
 			num-irq = <256>;
 			cpu-id = <10>;
 #ifdef HPSC
