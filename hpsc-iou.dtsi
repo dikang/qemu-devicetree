@@ -31,7 +31,8 @@
 #include "hpsc.dtsh"
 #include "hpsc-icnt.dtsi"
 
-//#define HPSC_NAND
+#define HPSC_NAND
+#define HPSC_DMA
 #define HPSC
 /* SPI_FLASH : Helper macro for creating flash devices
  * args:
@@ -396,6 +397,128 @@ glue(ocm_mem_ctrl_, n): glue(ocm_mem_ctrl_, n)@n {			\
 			interrupts = <USB3_0_1_PMU_WAKEUP_IRQ_1>;
 		};
 
+#ifdef HPSC_NAND
+		ps7_smcc_0: ps7-smcc@PL353 {
+			#address-cells = <2>;            
+			#size-cells = <1>;            
+			arm,addr25 = <0x0>;            
+/*
+			arm,nor-chip-sel0 = <0x0>;            
+			arm,nor-chip-sel1 = <0x0>;            
+			arm,sram-chip-sel0 = <0x0>;            
+			arm,sram-chip-sel1 = <0x0>;            
+*/
+			clock-names = "memclk", "aclk";            
+/*			clocks = <&clkc 11>, <&clkc 44>;             */
+			clocks = <&misc_clk>, <&misc_clk>;
+			compatible = "arm,pl35x";
+/*			interrupt-parent = <&ps7_scugic_0>;            
+			interrupts = <0 18 4>;             */
+			interrupts = <NAND_IRQ_0>;
+			ranges ;            
+			reg = <0x0 0xf92d0000 0x1000>;            
+#define USE_NAND_FDT
+#ifdef USE_NAND_FDT
+			nand0: nand0@e1000000 {
+				arm,nand-cycle-t0 = <0x4>;                
+				arm,nand-cycle-t1 = <0x4>;                
+				arm,nand-cycle-t2 = <0x1>;                
+				arm,nand-cycle-t3 = <0x2>;                
+				arm,nand-cycle-t4 = <0x2>;                
+				arm,nand-cycle-t5 = <0x2>;                
+				arm,nand-cycle-t6 = <0x4>;                
+				manufacturer_id = <0x2c>;
+				chip_id = <0xaa>;
+				drive = "";
+				label = "nand0";                    
+                                status = "disabled";
+                                compatible = "nand";
+                                reg = <0x0 0xe1000000 0x1000000>;
+                                #address-cells = <0x2>;
+                                #size-cells = <0x1>;
+#ifdef TEST
+			        partitions {
+			                compatible = "fixed-partitions";
+			                #address-cells = <1>;
+			                #size-cells = <2>;
+
+			                /* a 4 GiB partition */
+			                partition@0 {
+			                        label = "filesystem";
+			                        reg = <0x00000000 0x1 0x00000000>;
+			                };
+			        };
+#endif
+                        };
+#ifdef TEST
+                        nand1: nand1@e2000000 {
+				label = "nand1";                    
+                                status = "disabled";
+                                compatible = "nand";
+                                reg = <0xe2000000 0x1000000>;
+                                #address-cells = <0x1>;
+                                #size-cells = <0x1>;
+                        };
+#endif
+                        nor0: flash@e2000000 {
+                                status = "disabled";
+                                compatible = "cfi-flash";
+                                reg = <0x0 0xe2000000 0x2000000>;
+                                #address-cells = <2>;
+                                #size-cells = <1>;
+                        };
+#ifdef TEST2
+			ps7_nand_0: ps7-nand@e1000000 {
+				arm,nand-cycle-t0 = <0x4>;                
+				arm,nand-cycle-t1 = <0x4>;                
+				arm,nand-cycle-t2 = <0x1>;                
+				arm,nand-cycle-t3 = <0x2>;                
+				arm,nand-cycle-t4 = <0x2>;                
+				arm,nand-cycle-t5 = <0x2>;                
+				arm,nand-cycle-t6 = <0x4>;                
+				compatible = "arm,nand";                
+				reg = <0xe1000000 0x1000000>;                
+				#address-cells = <1>;                
+				#size-cells = <1>;    
+			        partitions {
+			                compatible = "fixed-partitions";
+			                #address-cells = <1>;
+			                #size-cells = <2>;
+
+			                /* a 4 GiB partition */
+			                partition@0 {
+			                        label = "filesystem";
+			                        reg = <0x00000000 0x1 0x00000000>;
+			                };
+			        };
+#ifdef TEST             
+				partition@nand-fsbl-uboot {                    
+					label = "nand-fsbl-uboot";                    
+					reg = <0x0 0x100000>;                
+				};
+				partition@nand-linux {                    
+					label = "nand-linux";                    
+					reg = <0x100000 0x500000>;                
+				};
+				partition@nand-device-tree {                    
+					label = "nand-device-tree";                    
+					reg = <0x600000 0x20000>;                
+				};
+				partition@nand-rootfs {                    
+					label = "nand-rootfs";                    
+					reg = <0x620000 0x5E0000>;                
+				};
+				partition@nand-bitstream {                    
+					label = "nand-bitstream";                    
+					reg = <0xC00000 0x400000>;                 
+				};
+#endif
+			};
+#endif
+#endif	/* USE_NAND_FDT */
+		}; 
+#else
+
 		nand: arasan_nfc@NAND {
 			compatible = "arasan,nfc";
 			reg = <BASE_ADDR(NAND) 0x1000>;
@@ -413,6 +536,7 @@ glue(ocm_mem_ctrl_, n): glue(ocm_mem_ctrl_, n)@n {			\
 			};
 		};
 
+#endif		
 		psu_gpio: psu_gpio@GPIO {
 			#gpio-cells = <1>;
 			compatible = "xlnx,zynqmp-gpio";
@@ -495,7 +619,6 @@ glue(ocm_mem_ctrl_, n): glue(ocm_mem_ctrl_, n)@n {			\
 			xlnx,has-wp = <0x1>;
 			xlnx,sdio-clk-freq-hz = <50000000>;
 		};
-
 		ps7_spi_0: ps7-spi@SPI0 {
 			#address-cells = <1>;
 			#size-cells = <0>;
@@ -603,57 +726,6 @@ glue(ocm_mem_ctrl_, n): glue(ocm_mem_ctrl_, n)@n {			\
 			reg = <BASE_ADDR(OCM) 0x1000>;
 		};
 
-#ifdef HPSC_NAND	/* not used */
-		ps7_smcc_0: ps7-smcc@e000e000 {            
-			#address-cells = <1>;            
-			#size-cells = <1>;            
-			arm,addr25 = <0x0>;            
-			arm,nor-chip-sel0 = <0x0>;            
-			arm,nor-chip-sel1 = <0x0>;            
-			arm,sram-chip-sel0 = <0x0>;            
-			arm,sram-chip-sel1 = <0x0>;            
-			clock-names = "memclk", "aclk";            
-			clocks = <&clkc 11>, <&clkc 44>;            
-			compatible = "arm,pl35x-smc-r2p1";            
-			interrupt-parent = <&ps7_scugic_0>;            
-			interrupts = <0 18 4>;            
-			ranges ;            
-			reg = <0xe000e000 0x1000>;            
-			ps7_nand_0: ps7-nand@e1000000 {                
-				arm,nand-cycle-t0 = <0x4>;                
-				arm,nand-cycle-t1 = <0x4>;                
-				arm,nand-cycle-t2 = <0x1>;                
-				arm,nand-cycle-t3 = <0x2>;                
-				arm,nand-cycle-t4 = <0x2>;                
-				arm,nand-cycle-t5 = <0x2>;                
-				arm,nand-cycle-t6 = <0x4>;                
-				compatible = "arm,pl35x-nand-r2p1";                
-				reg = <0xe1000000 0x1000000>;                
-				#address-cells = <1>;                
-				#size-cells = <1>;                 
-				partition@nand-fsbl-uboot {                    
-					label = "nand-fsbl-uboot";                    
-					reg = <0x0 0x100000>;                
-				};
-				partition@nand-linux {                    
-					label = "nand-linux";                    
-					reg = <0x100000 0x500000>;                
-				};
-				partition@nand-device-tree {                    
-					label = "nand-device-tree";                    
-					reg = <0x600000 0x20000>;                
-				};
-				partition@nand-rootfs {                    
-					label = "nand-rootfs";                    
-					reg = <0x620000 0x5E0000>;                
-				};
-				partition@nand-bitstream {                    
-					label = "nand-bitstream";                    
-					reg = <0xC00000 0x400000>;                 
-				};
-			};
-		}; 
-#endif
 		ZDMA_CHANNEL(adma0, adma, ADMA_0_BASE, ADMA_IRQ_0, 64, &smmu_tbu2, 0x868);
 		ZDMA_CHANNEL(adma1, adma, ADMA_1_BASE, ADMA_IRQ_1, 64, &smmu_tbu2, 0x869);
 		ZDMA_CHANNEL(adma2, adma, ADMA_2_BASE, ADMA_IRQ_2, 64, &smmu_tbu2, 0x86a);

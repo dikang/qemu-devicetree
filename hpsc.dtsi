@@ -384,8 +384,13 @@
 			arm,ccsidr1 = <0x24770011>;
 			reg = <0>;
 			timebase-frequency = <100000000>;
+#ifdef HPSC__
 			mr = <&amba_trch>;
 			memory = <&amba_trch>;
+#else
+			mr = <&amba_apu>;
+			memory = <&amba_apu>;
+#endif
 			memattr = <&trch_memattr>;
 #ifdef HPSC_TEST
 			gpios = <&crl 0 >;
@@ -427,6 +432,18 @@
 			interrupt-controller;
 			#interrupt-cells = <1>;
 		};
+#ifdef HPSC
+		amba_trch_nvic: interrupt-controller@0xe000e000  {
+			#address-cells = <MEMORY_ADDRESS_CELLS>;
+			#size-cells = <1>;
+			compatible = "arm,armv7m_nvic";
+			interrupt-controller;
+			#interrupt-cells = <3>;
+			reg = <0x0 0xe000e000 0x1000>;
+			num-irq = <256>;
+			cpu-id = <10>;
+		};
+#endif
 
 	};
 
@@ -706,7 +723,28 @@
 		};
 	};
 
+#ifdef HPSC_NVIC__
+		amba_trch_nvic: interrupt-controller@0xe000e100  {
+			#address-cells = <MEMORY_ADDRESS_CELLS>;
+			#size-cells = <1>;
+			compatible = "arm,armv7m_nvic";
+			interrupt-controller;
+			#interrupt-cells = <3>;
+			reg = <0x0 0xe000e100 0xc00>;
+			num-irq = <256>;
+			cpu-id = <10>;
+			container = <&amba>;
+			/* interrupts-extended =
+				<&trch_cpu0 0>;   */ /* with this, Qemu complains */
+		};
+#endif
+
+#ifdef HPSC__
 	amba_trch: amba_trch@0 {
+		#address-cells = <MEMORY_ADDRESS_CELLS>;
+		#size-cells = <1>;
+		compatible = "xlnx,ps7-axi-interconnect-1.00.a", "simple-bus";
+		ranges ;
 #ifdef HPSC_NVIC
 		amba_trch_nvic: interrupt-controller@0xe000e100  {
 			#address-cells = <MEMORY_ADDRESS_CELLS>;
@@ -717,14 +755,15 @@
 			reg = <0x0 0xe000e100 0xc00>;
 			num-irq = <256>;
 			cpu-id = <10>;
+#ifdef HPSC
+			container = <&trch_cpu0>;
+#endif
 			/* interrupts-extended =
 				<&trch_cpu0 0>;   */ /* with this, Qemu complains */
 		};
 #endif
-
-
 	};
-
+#endif
 	amba_rpu: amba_rpu@0 {
 		rpu_gic: interrupt-controller@R5_GIC_DIST {
 			#address-cells = <0>;
@@ -835,7 +874,7 @@
 	ddr-mem-for-rpu = <&ddr_memory_2_for_rpu>;
 };
 
-#ifdef HPSC_NEW_MEM
+#ifdef HPSC_NEW_MEM__
 &amba_trch {
 	ddr_memory_2_for_trch: ddr_memory_2_for_trch {
 		compatible = "qemu:memory-region";
