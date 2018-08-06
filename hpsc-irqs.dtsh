@@ -199,6 +199,16 @@
 #define HPPS_TRCH_MAILBOX_IRQ_1		164
 #define HPPS_RTPS_MAILBOX_IRQ_0		165
 #define HPPS_RTPS_MAILBOX_IRQ_1		166
+#define TRCH_DMA_IRQ_0			167
+#define TRCH_DMA_IRQ_1			168
+#define RTPS_DMA_IRQ_0			169
+#define RTPS_DMA_IRQ_1			170
+#define HPPS_DMA_IRQ_0			171
+#define HPPS_DMA_IRQ_1			172
+#define SRIO0_DMA_IRQ_0			173
+#define SRIO0_DMA_IRQ_1			174
+#define SRIO1_DMA_IRQ_0			175
+#define SRIO1_DMA_IRQ_1			176
 #endif
 #define APU_CTI_IRQ_0				139
 #define APU_CTI_IRQ_1				140

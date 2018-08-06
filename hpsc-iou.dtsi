@@ -680,6 +680,46 @@ glue(ocm_mem_ctrl_, n): glue(ocm_mem_ctrl_, n)@n {			\
 		ZDMA_CHANNEL(adma6, adma, ADMA_6_BASE, ADMA_IRQ_6, 64, &smmu_tbu2, 0x86e);
 		ZDMA_CHANNEL(adma7, adma, ADMA_7_BASE, ADMA_IRQ_7, 64, &smmu_tbu2, 0x86f);
 
+		trch_dma: dma-controller@0x3000b000 {
+			compatible = "arm,pl330", "arm,primecell";
+			reg = <0x0 0x3000b000 0x1000>;
+			interrupts = <TRCH_DMA_IRQ_0
+ 				      TRCH_DMA_IRQ_1>;
+			#dma-cells = <1>;
+		};
+
+		rtps_dma: dma-controller@0x38440000 {
+			compatible = "arm,pl330", "arm,primecell";
+			reg = <0x0 0x38440000 0x1000>;
+			interrupts = <RTPS_DMA_IRQ_0
+ 				      RTPS_DMA_IRQ_1>;
+			#dma-cells = <1>;
+		};
+
+		hpps_dma: dma-controller@0xf92e0000 {
+			compatible = "arm,pl330", "arm,primecell";
+			reg = <0x0 0xf92e0000 0x1000>;
+			interrupts = <HPPS_DMA_IRQ_0
+ 				      HPPS_DMA_IRQ_1>;
+			#dma-cells = <1>;
+		};
+
+		srio0_dma: dma-controller@0xe5310000 {
+			compatible = "arm,pl330", "arm,primecell";
+			reg = <0x0 0xe5310000 0x1000>;
+			interrupts = <SRIO0_DMA_IRQ_0
+ 				      SRIO0_DMA_IRQ_1>;
+			#dma-cells = <1>;
+		};
+
+		srio1_dma: dma-controller@0xe5320000 {
+			compatible = "arm,pl330", "arm,primecell";
+			reg = <0x0 0xe5320000 0x1000>;
+			interrupts = <SRIO1_DMA_IRQ_0
+ 				      SRIO1_DMA_IRQ_1>;
+			#dma-cells = <1>;
+		};
+
 		crl: crl@CRL_APB {
 			compatible = "xlnx,zynqmp-crl";
 			reg = <BASE_ADDR(CRL_APB) 0x1000>;
