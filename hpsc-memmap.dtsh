@@ -93,7 +93,9 @@ name: name@addr64 {														\
 #define R5_GIC			0xF9001000
 #endif
 
-#define HPPS_MBOX		0xF9240000
+#define RTPS_TRCH_MAILBOX	0x3000a000
+#define HPPS_TRCH_MAILBOX	0xF9220000
+#define HPPS_RTPS_MAILBOX	0xF9230000
 
 
 #define M4_GIC			0xE000E000
