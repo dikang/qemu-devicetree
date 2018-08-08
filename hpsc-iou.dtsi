@@ -596,19 +596,19 @@ glue(ocm_mem_ctrl_, n): glue(ocm_mem_ctrl_, n)@n {			\
 			status = "disabled";
 		};
 #endif
-		rtps_trch_mbox: mailbox@RTPS_HPPS_MAILBOX {
+		rtps_trch_mailbox: mailbox@RTPS_HPPS_MAILBOX {
 			compatible = "hpsc,hpsc-mbox";
 			interrupts = <RTPS_TRCH_MAILBOX_IRQ_0 RTPS_TRCH_MAILBOX_IRQ_1>;
 			reg = <BASE_ADDR(RTPS_TRCH_MAILBOX) 0x80000>;
 		};
 
-		hpps_trch_mbox: mailbox@HPPS_TRCH_MAILBOX {
+		hpps_trch_mailbox: mailbox@HPPS_TRCH_MAILBOX {
 			compatible = "hpsc,hpsc-mbox";
 			interrupts = <HPPS_TRCH_MAILBOX_IRQ_0 HPPS_TRCH_MAILBOX_IRQ_1>;
 			reg = <BASE_ADDR(HPPS_TRCH_MAILBOX) 0x80000>;
 		};
 
-		hpps_rtps_mbox: mailbox@HPPS_RTPS_MAILBOX {
+		hpps_rtps_mailbox: mailbox@HPPS_RTPS_MAILBOX {
 			compatible = "hpsc,hpsc-mbox";
 			interrupts = <HPPS_RTPS_MAILBOX_IRQ_0 HPPS_RTPS_MAILBOX_IRQ_1>;
 			reg = <BASE_ADDR(HPPS_RTPS_MAILBOX) 0x80000>;
