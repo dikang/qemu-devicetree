@@ -30,6 +30,7 @@
 
 #include "hpsc.dtsh"
 
+#define HPSC_R52
 #define HPSC_NVIC
 #define HPSC_NEW_GIC
 #define HPSC_NEW_MEM
@@ -134,6 +135,29 @@
 	arm,mp-affinity = <glue(0x20,n)>;								\
 	arm,id_pfr0 = <0x131>;										\
 	arm,reset-hivecs = <1>;										\
+	#interrupt-cells = <1>;
+
+#define R52_CPU_COMMON(n)										\
+	compatible = "cortex-r52f-arm-cpu";								\
+	d-cache-line-size = <0x20>;									\
+	d-cache-size = <0x8000>;									\
+	device_type = "cpu";										\
+	i-cache-line-size = <0x20>;									\
+	i-cache-size = <0x8000>;									\
+	arm,midr=<0x411fd130>;										\
+	arm,tcmtr=<0x00010003>;										\
+	arm,ctr=<0x8144c004>;										\
+	arm,clidr=<0x09200003>;										\
+	arm,ccsidr0 = <0xf01fe019>;									\
+	arm,ccsidr1 = <0xf01fe019>;									\
+	arm,mp-affinity = <glue(0x20,n)>;								\
+	arm,id_pfr0 = <0x131>;										\
+	arm,rvbar = <0xfffff000>;			\
+	arm,reset_sctlr = <0x30c50838>;			\
+	arm,vbar = <0x00100000>;			\
+	arm,atcmregionr = <0x00000014>;			\
+	arm,btcmregionr = <0x00004014>;			\
+	arm,ctcmregionr = <0x00008014>;			\
 	#interrupt-cells = <1>;
 
 / {
@@ -330,7 +354,11 @@
 		};
 #endif
 		rpu_cpu0: rpu_cpu@0 {
+#ifdef HPSC_R52
+			R52_CPU_COMMON(0)
+#else
 			R5_CPU_COMMON(0)
+#endif
 			reg = <0>;
 			mr = <&amba_rpu0>;
 			memory = <&amba_rpu0>;
@@ -349,7 +377,11 @@
 			memattr_ns = <&rpu0_memattr>;
 		};
 		rpu_cpu1: rpu_cpu@1 {
+#ifdef HPSC_R52
+			R52_CPU_COMMON(1)
+#else
 			R5_CPU_COMMON(1)
+#endif
 			reg = <1>;
 			mr = <&amba_rpu1>;
 			memory = <&amba_rpu1>;
@@ -373,7 +405,7 @@
 			clock-frequency = <100000000>;
 			d-cache-line-size = <0x20>;			
 			d-cache-size = <0x1000>;			
-			compatible = "cortex-m4-arm-cpu";
+			compatible = "cortex-m4f-arm-cpu";
 			device_type = "cpu";
 			i-cache-line-size = <0x20>;		
 			i-cache-size = <0x200>;
