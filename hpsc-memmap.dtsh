@@ -77,7 +77,7 @@ name: name@addr64 {														\
 #define ACPU_GIC_HYP		0xF9040000
 #define ACPU_GIC_VCPU		0xF9060000
 
-/* DK: temporary */
+/* DK: temporary: must be consistent with arm,cfgperiphbase*/
 #define R5_GIC_DIST		0xF9A00000
 #define R5_GIC			0xF9A01000
 

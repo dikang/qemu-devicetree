@@ -30,6 +30,7 @@
 
 #include "hpsc.dtsh"
 
+#define HPSC_R52GIC
 #define HPSC_R52
 #define HPSC_NVIC
 #define HPSC_NEW_GIC
@@ -155,6 +156,7 @@
 	arm,rvbar = <0xfffff000>;			\
 	arm,reset_sctlr = <0x30c50838>;			\
 	arm,vbar = <0x00100000>;			\
+        arm,cfgperiphbase = <0xF9A00000>;		\
 	arm,atcmregionr = <0x00000014>;			\
 	arm,btcmregionr = <0x00004014>;			\
 	arm,ctcmregionr = <0x00008014>;			\
@@ -575,6 +577,7 @@
 				<&gic 0x1 0x9 0x804>;
 #ifdef HPSC
 			num-cpu = <8>;
+			cpu-start-id = <0>;
 #else
 			num-cpu = <4>;
 #endif
@@ -797,17 +800,24 @@
 	};
 #endif
 	amba_rpu: amba_rpu@0 {
-		rpu_gic: interrupt-controller@R5_GIC_DIST {
+		rpu_gic: interrupt-controller@R4_GIC_DIST {
 			#address-cells = <0>;
 			#interrupt-cells = <3>;
 			#size-cells = <0>;
+#ifdef HPSC_R52GIC
+			compatible = "xlnx,zynqmp-scugic","arm,arm-gicv3";
+			reg = < BASE_ADDR(0xF9A00000) 0x20000 0		/* GICD */
+				BASE_ADDR(0xF9B00000) 0x100000 0>;	/* GICR */
+#else
 			compatible = "xlnx,zynqmp-scugic", "arm,gic";
 			reg = <	BASE_ADDR(R5_GIC_DIST) 0x0 0x1000 0x0
 					BASE_ADDR(R5_GIC) 0x0 0x100 0x0>;
+#endif
 			status = "disabled";
 			interrupt-controller ;
 			num-irq = <256>;
 			num-cpu = <2>;
+			cpu-start-id = <8>;
 			interrupts-extended =
 				<&rpu_cpu0 0>,
 				<&rpu_cpu1 0>;
