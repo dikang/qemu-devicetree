@@ -94,6 +94,16 @@ name: name@addr64 {														\
 #endif
 
 #define PL353			0xF92D0000
+/* #define RTPS_TRCH_MAILBOX	0x3000a000 */
+#define RTPS_TRCH_MAILBOX	0xF9240000
+#define HPPS_TRCH_MAILBOX	0xF9220000
+#define HPPS_RTPS_MAILBOX	0xF9230000
+
+#define TRCH_DMA		0x3000B000
+#define RTPS_DMA		0x38440000
+#define HPPS_DMA		0xF92E0000
+#define SRIO0_DMA		0xE5310000
+#define SRIO1_DMA		0xE5320000
 
 #define M4_GIC			0xE000E000
 

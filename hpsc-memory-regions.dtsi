@@ -251,13 +251,16 @@ NAME ## _memattr: NAME ## _ma {						\
 		};
 	};
 
+//#define HPSC_TEST_AMBA
 	amba_rpu0: amba_rpu0@0 {
 		#address-cells = <MEMORY_ADDRESS_CELLS>;
 		#size-cells = <2>;
 		#priority-cells = <1>;
 		compatible = "xlnx,ps7-axi-interconnect-1.00.a", "simple-bus";
 		ranges;
-
+#ifdef HPSC_TEST_AMBA__
+		container = <&amba>;
+#endif
 		tcm_cache_rpu0 {
 		    compatible = "qemu:memory-region";
 		    alias = <&tcm_cache_rpu0>;
@@ -266,7 +269,11 @@ NAME ## _memattr: NAME ## _ma {						\
 
 		rpu_bus_for_rpu0 {
 			compatible = "qemu:memory-region";
+#ifdef HPSC_TEST_AMBA
+			alias = <&amba>;
+#else
 			alias = <&amba_rpu>;
+#endif
 			reg = <BASE_ADDR(0x0) 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF>;
 		};
 	};

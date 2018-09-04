@@ -151,12 +151,14 @@
 	arm,clidr=<0x09200003>;										\
 	arm,ccsidr0 = <0xf01fe019>;									\
 	arm,ccsidr1 = <0xf01fe019>;									\
-	arm,mp-affinity = <glue(0x20,n)>;								\
+	arm,mp-affinity = <n>;								\
 	arm,id_pfr0 = <0x131>;										\
-	arm,rvbar = <0xfffff000>;			\
+	arm,rvbar = <0x00100000>;			\
 	arm,reset_sctlr = <0x30c50838>;			\
 	arm,vbar = <0x00100000>;			\
         arm,cfgperiphbase = <0xF9A00000>;		\
+        arm,buildoptr= <0x00f00000>;		\
+        arm,pinoptr= <0x00000000>;		\
 	arm,atcmregionr = <0x00000014>;			\
 	arm,btcmregionr = <0x00004014>;			\
 	arm,ctcmregionr = <0x00008014>;			\
@@ -244,6 +246,7 @@
 			cpu3 = <&cpu3>;
 		};
 #endif
+
 		rpu_ctrl: rpu_control@RPU {
 			#gpio-cells = <1>;
 			compatible = "xlnx,rpu-control";
@@ -602,7 +605,7 @@
 			int-id = <0x0202143B>;
 #endif
 		};
-
+#ifndef HPSC_NEW_GIC
 		/* Alias the GIC CPU registers every 4kB over 64kB */
 		zynqmp-gic-cpu-alias@0xf9021000 {
 			compatible = "qemu:memory-region";
@@ -756,8 +759,8 @@
 			alias = <&gic 3>;
 			reg = <BASE_ADDR(0xf906f000) 0x1000 1>;
 		};
+#endif
 	};
-
 #ifdef HPSC_NVIC__
 		amba_trch_nvic: interrupt-controller@0xe000e000  {
 			#address-cells = <MEMORY_ADDRESS_CELLS>;
@@ -799,13 +802,26 @@
 #endif
 	};
 #endif
-	amba_rpu: amba_rpu@0 {
-		rpu_gic: interrupt-controller@R4_GIC_DIST {
+
+#define HPSC_TEST_AMBA
+/*	amba_rpu: amba_rpu@0 { */
+	amba_rpu_gic: amba_rpu_gic@0 {
+#ifdef HPSC_TEST_AMBA
+		#address-cells = <MEMORY_ADDRESS_CELLS>;
+		#priority-cells = <1>;
+		#size-cells = <1>;
+		compatible = "xlnx,ps7-axi-interconnect-1.00.a", "simple-bus";
+		ranges ;
+		container = <&amba>;
+		priority = <0xFFFFFFFF>; /* -1 */
+#endif
+		rpu_gic: interrupt-controller@R5_GIC_DIST {
 			#address-cells = <0>;
 			#interrupt-cells = <3>;
 			#size-cells = <0>;
 #ifdef HPSC_R52GIC
-			compatible = "xlnx,zynqmp-scugic","arm,arm-gicv3";
+/*			compatible = "xlnx,zynqmp-scugic","arm,arm-gicv3"; */
+			compatible = "arm,arm-gicv3";
 			reg = < BASE_ADDR(0xF9A00000) 0x20000 0		/* GICD */
 				BASE_ADDR(0xF9B00000) 0x100000 0>;	/* GICR */
 #else
@@ -813,14 +829,50 @@
 			reg = <	BASE_ADDR(R5_GIC_DIST) 0x0 0x1000 0x0
 					BASE_ADDR(R5_GIC) 0x0 0x100 0x0>;
 #endif
-			status = "disabled";
+/*			status = "disabled"; */
 			interrupt-controller ;
-			num-irq = <256>;
+			num-irq = <320>;
 			num-cpu = <2>;
 			cpu-start-id = <8>;
+			revision = <3>;
 			interrupts-extended =
 				<&rpu_cpu0 0>,
-				<&rpu_cpu1 0>;
+				<&rpu_cpu1 0>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&rpu_cpu0 2>,
+				<&rpu_cpu1 2>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&rpu_cpu0 1>,
+				<&rpu_cpu1 1>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&rpu_cpu0 3>,
+				<&rpu_cpu1 3>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&dummy 0>,
+				<&rpu_gic 0x1 0x9 0x104>,
+				<&rpu_gic 0x1 0x9 0x204>,
+				<&rpu_gic 0x1 0x9 0x404>,
+				<&rpu_gic 0x1 0x9 0x804>;
+			#redistributor-regions = <1>;
 		};
 	};
 
