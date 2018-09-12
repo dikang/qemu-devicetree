@@ -150,8 +150,6 @@
 
                 gdb-id = "TRCH Cortex-M4";
 
-                #interrupt-cells = <3>; /* without this, Qemu complains */
-
                 clock-frequency = <100000000>;
                 d-cache-line-size = <0x20>;            
                 d-cache-size = <0x1000>;            
@@ -177,6 +175,7 @@
             #address-cells = <1>;
 
 #define RTPS_CPU_PROPS                                 \
+                #interrupt-cells = <1>;                \
                 compatible = "cortex-r52f-arm-cpu";    \
                 device_type = "cpu";                   \
                 d-cache-line-size = <0x20>;            \
@@ -255,10 +254,10 @@
         hpps_cpus {
             #address-cells = <2>;
 
-#define HPPS_CPU_PROPS                                      \
+#define HPPS_CPU_PROPS                                    \
+                #interrupt-cells = <1>;                   \
                 compatible = "cortex-a53-arm-cpu";        \
                 device_type = "cpu";                      \
-                #interrupt-cells = <1>;                   \
                 d-cache-line-size = <0x20>;               \
                 d-cache-size = <0x8000>;                  \
                 i-cache-line-size = <0x20>;               \
@@ -555,46 +554,24 @@
                 num-cpu = <2>;
                 revision = <3>;
 
-                /* TODO: figure out what these are for */
-#if 0
-                interrupts-extended =
-                      <&rpu_cpu0 0>,
-                      <&rpu_cpu1 0>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&rpu_cpu0 2>,
-                      <&rpu_cpu1 2>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&rpu_cpu0 1>,
-                      <&rpu_cpu1 1>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&rpu_cpu0 3>,
-                      <&rpu_cpu1 3>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&dummy 0>,
-                      <&rpu_gic 0x1 0x9 0x104>,
-                      <&rpu_gic 0x1 0x9 0x204>,
-                      <&rpu_gic 0x1 0x9 0x404>,
-                      <&rpu_gic 0x1 0x9 0x804>;
-#endif
+                interrupts-extended = /* signals output by the interrupt controller */
+                        /* IRQ * #cpus; each wired to input signal 0=IRQ on each CPU */
+                        <&rtps_cpu0 0>, <&rtps_cpu1 0>,
+                        /* FIQ * #cpus, each wired to input signal 1=FIQ on each CPU */
+                        <&rtps_cpu0 1>, <&rtps_cpu1 1>,
+                        /* vIRQ * #cpus, each wired to input signal 2=vIRQ on each CPU */
+                        <&rtps_cpu0 2>, <&rtps_cpu1 2>,
+                        /* vFIQ * #cpus, each wired to input signal 3=vFIQ on each CPU */
+                        <&rtps_cpu0 3>, <&rtps_cpu1 3>,
+                        /* maintanance * #cpus: each wired to a set of inputs on this interrupt controller */
+                            /* inputs into this interrupt controller:
+                                       [0 .. num-irq-1]: SPI
+                                       [num-irq * cpuidx .. num-irq * cpuidx + 32]: PPI for CPU# cpuidx ( * #cpus )
+                               set of input irq# = { num-irq - 16 + idx + 32*cpuidx | foreach cpuidx set in bitmask }
+
+                                   0(SPI)|1(PPI)    idx    bit[31:8]=bitmask of cpu set (i.e. of inputs in PPI range for each CPU) */
+                        <&rtps_gic 0x1              0x9    0x0100>,
+                        <&rtps_gic 0x1              0x9    0x0200>;
         };
 
         /* TODO: dummy node enabled in SPLIT mode only, revise this when implementing lock/split modes */
@@ -750,23 +727,34 @@
                         0xf9100000  /* WARN: this size value is unused; hardcoded in source code */ 0x100000   /* prio = */ 0x0>; /* GICR */
                 interrupt-controller ;
                 num-irq = <320>;
-                interrupts-extended =
+                interrupts-extended = /* signals output by the interrupt controller */
+                        /* IRQ * #cpus; each wired to input signal 0=IRQ on each CPU */
                         <&hpps_cpu0 0>, <&hpps_cpu1 0>, <&hpps_cpu2 0>, <&hpps_cpu3 0>,
-                        <&hpps_cpu4 0>, <&hpps_cpu5 0>, <&hpps_cpu6 0>, <&hpps_cpu7 0>, 
-
-                        <&hpps_cpu0 2>, <&hpps_cpu1 2>, <&hpps_cpu2 2>, <&hpps_cpu3 2>, 
-                        <&hpps_cpu4 2>, <&hpps_cpu5 2>, <&hpps_cpu6 2>, <&hpps_cpu7 2>, 
-
+                        <&hpps_cpu4 0>, <&hpps_cpu5 0>, <&hpps_cpu6 0>, <&hpps_cpu7 0>,
+                        /* FIQ * #cpus, each wired to input signal 1=FIQ on each CPU */
                         <&hpps_cpu0 1>, <&hpps_cpu1 1>, <&hpps_cpu2 1>, <&hpps_cpu3 1>,
-                        <&hpps_cpu4 1>, <&hpps_cpu5 1>, <&hpps_cpu6 1>, <&hpps_cpu7 1>, 
-
-                        <&hpps_cpu0 3>, <&hpps_cpu1 3>, <&hpps_cpu2 3>, <&hpps_cpu3 3>, 
+                        <&hpps_cpu4 1>, <&hpps_cpu5 1>, <&hpps_cpu6 1>, <&hpps_cpu7 1>,
+                        /* vIRQ * #cpus, each wired to input signal 2=vIRQ on each CPU */
+                        <&hpps_cpu0 2>, <&hpps_cpu1 2>, <&hpps_cpu2 2>, <&hpps_cpu3 2>,
+                        <&hpps_cpu4 2>, <&hpps_cpu5 2>, <&hpps_cpu6 2>, <&hpps_cpu7 2>,
+                        /* vFIQ * #cpus, each wired to input signal 3=vFIQ on each CPU */
+                        <&hpps_cpu0 3>, <&hpps_cpu1 3>, <&hpps_cpu2 3>, <&hpps_cpu3 3>,
                         <&hpps_cpu4 3>, <&hpps_cpu5 3>, <&hpps_cpu6 3>, <&hpps_cpu7 3>,
+                        /* maintanance * #cpus: each wired to a set of inputs on this interrupt controller */
+                            /* inputs into this interrupt controller:
+                                       [0 .. num-irq-1]: SPI
+                                       [num-irq * cpuidx .. num-irq * cpuidx + 32]: PPI for CPU# cpuidx ( * #cpus )
+                               set of input irq# = { num-irq - 16 + idx + 32*cpuidx | foreach cpuidx set in bitmask }
 
-                        <&hpps_gic 0x1 0x9 0x104>,
-                        <&hpps_gic 0x1 0x9 0x204>,
-                        <&hpps_gic 0x1 0x9 0x404>,
-                        <&hpps_gic 0x1 0x9 0x804>;
+                                   0(SPI)|1(PPI)    idx    bit[31:8]=bitmask of cpu set (i.e. of inputs in PPI range for each CPU) */
+                        <&hpps_gic 0x1              0x9    0x0100>,
+                        <&hpps_gic 0x1              0x9    0x0200>,
+                        <&hpps_gic 0x1              0x9    0x0400>,
+                        <&hpps_gic 0x1              0x9    0x0800>,
+                        <&hpps_gic 0x1              0x9    0x1000>,
+                        <&hpps_gic 0x1              0x9    0x2000>,
+                        <&hpps_gic 0x1              0x9    0x4000>,
+                        <&hpps_gic 0x1              0x9    0x8000>;
 
                 cpu-start-id = <3>;
                 num-cpu = <8>;
