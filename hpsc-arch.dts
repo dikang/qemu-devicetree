@@ -544,6 +544,8 @@
                 #redistributor-regions = <1>;
 
                 compatible = "arm,arm-gicv3";
+                revision = <3>;
+
                 /* NOTE: if you change this address, also change arm,cfgperiphbase in cpu node */
                 reg = <0xf9a00000 /* WARN: this size value is unused; hardcoded in source code */  0x20000    /* prio = */ 0x1 /* GICD */
                        0xf9b00000 /* WARN: this size value is unused; hardcoded in source code */ 0x100000    /* prio = */ 0x1>;  /* GICR */
@@ -552,7 +554,6 @@
                 num-irq = <320>;
                 cpu-start-id = <1>;
                 num-cpu = <2>;
-                revision = <3>;
 
                 interrupts-extended = /* signals output by the interrupt controller */
                         /* IRQ * #cpus; each wired to input signal 0=IRQ on each CPU */
@@ -723,6 +724,8 @@
                 #redistributor-regions = <1>;
 
                 compatible = "arm,arm-gicv3";
+                revision = <3>;
+
                 reg = < 0xf9000000  /* WARN: this size value is unused; hardcoded in source code */ 0x20000    /* prio = */ 0x0   /* GICD */
                         0xf9100000  /* WARN: this size value is unused; hardcoded in source code */ 0x100000   /* prio = */ 0x0>; /* GICR */
                 interrupt-controller ;
@@ -758,7 +761,6 @@
 
                 cpu-start-id = <3>;
                 num-cpu = <8>;
-                revision = <3>;
         };
 
         /* timer interrupt
