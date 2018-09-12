@@ -69,11 +69,7 @@
        property alone, afaik.
 
        Also, we define the map in the root node, because the mappings must
-       apply to device spread around different branches of the tree. An
-       altenative might be to split the map definition into sections, one per the set
-       of devices in each NIC/CCN, but that has the disadvantage that there won't be
-       one list per interrupt controller where all inputs could be together, so that
-       it is easy to number them consecutively and prevent mistakes.
+       apply to devices spread around different branches of the tree.
 
        For now, the map is such that interrupt with ID N is mapped to the
        controller input number N. AFAIU, the interrupt controller input
@@ -82,6 +78,8 @@
     */
     interrupt-map-mask = <0x0 0x0 0xffff>;	/* 0 0 (don't know) 0xffff (IRQ#) */
     interrupt-map = 
+      /* specifier for device interrupt (#cells=3, hardcoded/assumed in Qemu):
+         unused unused int#  */
         /*                       TRCH                                          */
         /* 3-cell int specifier      int ctrl  ? input #              int type  */ 
 #if 0 /* check how these are used before adding */
