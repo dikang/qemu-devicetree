@@ -529,6 +529,16 @@
             alias = <&crl_bus>;
             reg = <0x0 0xFFFFFFFF /* prio = -2 */ 0xfffffffe>;
         };
+        to_rpu_ctrl_bus { /* TODO: temporary hack, because both TRCH and RTPS (?) need this */
+            compatible = "qemu:memory-region";
+            alias = <&rpu_ctrl_bus>;
+            reg = <0x0 0xFFFFFFFF /* prio = -2 */ 0xfffffffe>;
+        };
+        to_apu_bus { /* TODO: temporary hack, because both TRCH and HPPS need this */
+            compatible = "qemu:memory-region";
+            alias = <&apu_bus>;
+            reg = <0x0 0xFFFFFFFF /* prio = -2 */ 0xfffffffe>;
+        };
 
         to_nic1 {
             #priority-cells = <1>;
@@ -718,6 +728,68 @@
         };
     };
 
+    rpu_ctrl_bus_descend1 {
+        compatible = "simple-bus";
+        ranges ;
+
+        rpu_ctrl_bus_descend2 {
+            compatible = "simple-bus";
+            ranges ;
+
+            rpu_ctrl_bus: rpu_ctrl_bus {
+                compatible = "simple-bus";
+                ranges ;
+
+                /* TODO: to be replaced with Boeing design for reset controller */
+                rpu_ctrl: rpu_control@0xff9a0000 {
+                    gpio-controller;
+                    #gpio-cells = <1>;
+                    compatible = "xlnx,rpu-control";
+                    reg = <0xff9a0000 0x400 /* prio = */ 0>;
+                    atcm1-for-rpu0 = <&atcm1_for_rpu0>;
+                    btcm1-for-rpu0 = <&btcm1_for_rpu0>;
+                    icache-for-rpu1 = <&icache_rpu1>;
+                    dcache-for-rpu1 = <&dcache_rpu1>;
+                    ddr-mem-for-rpu = <&ddr_memory_2_for_rpu>;
+                    gic-for-rpu = <&rtps_gic>;
+                };
+            };
+        };
+    };
+
+    apu_bus: apu_bus {
+        compatible = "simple-bus";
+        ranges ;
+
+        /* TODO: Xilinx-specific? Needed by ATF/Linux */
+        apu: apu@0xfd5c0000 {
+            compatible = "xlnx,apu";
+            #gpio-cells = <1>;
+            reg = <0xfd5c0000 0x1000 /* prio= */ 0x0>;
+            cpu0 = <&hpps_cpu0>;
+            cpu1 = <&hpps_cpu1>;
+            cpu2 = <&hpps_cpu2>;
+            cpu3 = <&hpps_cpu3>;
+
+            /* APU GPIO outputs:
+                  wfi_out   *4 (NOT connected)
+                  PWRDWNREQ *4 (connected to NCPUHALT input of HPPS CPUs)
+                  VINITHI   *4 (connected to VINITHI input of HPPS CPUs)
+             */
+        };
+
+        /* TODO: Xilinx-specific? Needed by ATF/Linux */
+        apu1: apu1@0xfd5c1000 {
+            compatible = "xlnx,apu";
+            #gpio-cells = <1>;
+            reg = <0xfd5c1000 0x1000 /* prio= */ 0x0>;
+            cpu0 = <&hpps_cpu4>;
+            cpu1 = <&hpps_cpu5>;
+            cpu2 = <&hpps_cpu6>;
+            cpu3 = <&hpps_cpu7>;
+        };
+    };
+
     hpps: hpps { /* view of address space from HPPS CPUs */
         compatible = "simple-bus";
         ranges ;
@@ -819,28 +891,12 @@
             alias = <&crl_bus>;
             reg = <0x0 0xFFFFFFFF /* prio = -2 */ 0xfffffffe>;
         };
-
-        /* TODO: Xilinx-specific? Needed by ATF/Linux */
-        apu: apu@0xfd5c0000 {
-            compatible = "xlnx,apu";
-            #gpio-cells = <1>;
-            reg = <0xfd5c0000 0x1000 /* prio= */ 0x0>;
-            cpu0 = <&hpps_cpu0>;
-            cpu1 = <&hpps_cpu1>;
-            cpu2 = <&hpps_cpu2>;
-            cpu3 = <&hpps_cpu3>;
+        to_apu_bus { /* TODO: temporary hack, because both TRCH and HPPS need this */
+            compatible = "qemu:memory-region";
+            alias = <&apu_bus>;
+            reg = <0x0 0xFFFFFFFF /* prio = -2 */ 0xfffffffe>;
         };
 
-        /* TODO: Xilinx-specific? Needed by ATF/Linux */
-        apu1: apu1@0xfd5c1000 {
-            compatible = "xlnx,apu";
-            #gpio-cells = <1>;
-            reg = <0xfd5c1000 0x1000 /* prio= */ 0x0>;
-            cpu0 = <&hpps_cpu4>;
-            cpu1 = <&hpps_cpu5>;
-            cpu2 = <&hpps_cpu6>;
-            cpu3 = <&hpps_cpu7>;
-        };
 
         pmu_global: pmu_global@0xffd80000 {
             compatible = "xlnx,pmu_global";
@@ -895,29 +951,6 @@
     nic2: nic2 {
         compatible = "simple-bus";
         ranges ;
-
-        nic2_descend1 {
-            compatible = "simple-bus";
-            ranges ;
-            nic2_descend2 {
-                compatible = "simple-bus";
-                ranges ;
-                /* TODO: does this exist in HPSC? Which NIC is it connected to? */
-                /* TODO: move to nic1, since this is to be replaced by Boeing reset controller */
-                rpu_ctrl: rpu_control@0xff9a0000 {
-                    gpio-controller;
-                    #gpio-cells = <1>;
-                    compatible = "xlnx,rpu-control";
-                    reg = <0xff9a0000 0x400 /* prio = */ 0>;
-                    atcm1-for-rpu0 = <&atcm1_for_rpu0>;
-                    btcm1-for-rpu0 = <&btcm1_for_rpu0>;
-                    icache-for-rpu1 = <&icache_rpu1>;
-                    dcache-for-rpu1 = <&dcache_rpu1>;
-                    ddr-mem-for-rpu = <&ddr_memory_2_for_rpu>;
-                    gic-for-rpu = <&rtps_gic>;
-                };
-            };
-        };
 
         /* TODO: RTPS SPI */
 
