@@ -55,6 +55,13 @@
 #define APU_IPI0_IRQ_0				35
 #endif
 
+/* TODO: The secondary CPU entry point is normally set by PSCI
+   code at time of reset request (also, the PSCI code uses the symbol instead
+   of a raw address). However, the setting of rvbar CPU property is currently
+   broken; so, for now, we define the entry point here. */
+#define HPPS_RESET_ADDR_PRIMARY_CPU   0xfffda000 /* ATF bl31_entrypoint */
+#define HPPS_RESET_ADDR_SECONDARY_CPU 0xfffda0f8 /* ATF bl31_warm_entrypoint */
+
 /dts-v1/;
 
 / {
@@ -292,7 +299,7 @@
 
                 reg = <0x0 0>;
                 arm,mp-affinity = <0>;
-                arm,rvbar = <0xfffda000>;
+                arm,rvbar = <HPPS_RESET_ADDR_PRIMARY_CPU>;
 
                 gpios = <&crf 0>;
                 gpio-names = "rst_cntrl";
@@ -317,7 +324,7 @@
 
                 reg = <0x0 1>;
                 arm,mp-affinity = <1>;
-                arm,rvbar = <0xfffda0f8>;
+                arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
                 gpios = <&crf 1>;
                 gpio-names = "rst_cntrl";
@@ -342,7 +349,7 @@
 
                 reg = <0x0 2>;
                 arm,mp-affinity = <2>;
-                arm,rvbar = <0xfffda0f8>;
+                arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
                 gpios = <&crf 2>;
                 gpio-names = "rst_cntrl";
@@ -367,7 +374,7 @@
 
                 reg = <0x0 3>;
                 arm,mp-affinity = <3>;
-                arm,rvbar = <0xfffda0f8>;
+                arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
                 gpios = <&crf 3>;
                 gpio-names = "rst_cntrl";
@@ -392,7 +399,7 @@
 
                 reg = <0x0 0x100>;
                 arm,mp-affinity = <0x100>;
-                arm,rvbar = <0xfffda0f8>;
+                arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
                 gpios = <&crf 0x4>;
                 gpio-names = "rst_cntrl";
@@ -417,7 +424,7 @@
 
                 reg = <0x0 0x101>;
                 arm,mp-affinity = <0x101>;
-                arm,rvbar = <0xfffda0f8>;
+                arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
                 gpios = <&crf 0x5>;
                 gpio-names = "rst_cntrl";
@@ -441,7 +448,7 @@
 
                 reg = <0x0 0x102>;
                 arm,mp-affinity = <0x102>;
-                arm,rvbar = <0xfffda0f8>;
+                arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
                 gpios = <&crf 0x6>;
                 gpio-names = "rst_cntrl";
@@ -465,7 +472,7 @@
 
                 reg = <0x0 0x103>;
                 arm,mp-affinity = <0x103>;
-                arm,rvbar = <0xfffda0f8>;
+                arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
                 gpios = <&crf 0x7>;
                 gpio-names = "rst_cntrl";
