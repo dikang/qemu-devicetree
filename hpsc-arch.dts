@@ -205,6 +205,7 @@
                 arm,atcmregionr = <0x00000014>;        \
                 arm,btcmregionr = <0x00004014>;        \
                 attrrm,ctcmregionr = <0x00008014>;     \
+                start-powered-off = <1>;               \
 
             rtps_memattr_cpu0: rtps_memattr_cpu@0 {
                     compatible = "qemu:memory-transaction-attr";
@@ -278,6 +279,7 @@
                 enable-method = "psci";                   \
                 arm,reset-hivecs = <1>;                   \
                 arm,reset-cbar = <0xfd3fe000>;            \
+                start-powered-off = <1>;                  \
                 mr = <&hpps>;                             \
                 memory = <&hpps>;                         \
                 memory_ns = <&hpps>;                      \
@@ -301,8 +303,12 @@
                 arm,mp-affinity = <0>;
                 arm,rvbar = <HPPS_RESET_ADDR_PRIMARY_CPU>;
 
-                gpios = <&crf 0>;
-                gpio-names = "rst_cntrl";
+                gpios = </* RESET    */ &crf 0
+                         /* NCPUHALT */ &apu 4
+                         /* VINITHI  */ &apu 8>;
+                gpio-names = "reset",
+                             "ncpuhalt",
+                             "vinithi";
 
                 memattr_s = <&hpps_memattr_cpu0_s>;
                 memattr_ns = <&hpps_memattr_cpu0_ns>;
@@ -326,8 +332,12 @@
                 arm,mp-affinity = <1>;
                 arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
-                gpios = <&crf 1>;
-                gpio-names = "rst_cntrl";
+                gpios = </* RESET    */ &crf 1
+                         /* NCPUHALT */ &apu 5
+                         /* VINITHI  */ &apu 9>;
+                gpio-names = "reset",
+                             "ncpuhalt",
+                             "vinithi";
 
                 memattr_s = <&hpps_memattr_cpu1_s>;
                 memattr_ns = <&hpps_memattr_cpu1_ns>;
@@ -351,8 +361,12 @@
                 arm,mp-affinity = <2>;
                 arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
-                gpios = <&crf 2>;
-                gpio-names = "rst_cntrl";
+                gpios = </* RESET    */ &crf 2
+                         /* NCPUHALT */ &apu 6
+                         /* VINITHI  */ &apu 10>;
+                gpio-names = "reset",
+                             "ncpuhalt",
+                             "vinithi";
 
                 memattr_s = <&hpps_memattr_cpu2_s>;
                 memattr_ns = <&hpps_memattr_cpu2_ns>;
@@ -376,8 +390,12 @@
                 arm,mp-affinity = <3>;
                 arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
-                gpios = <&crf 3>;
-                gpio-names = "rst_cntrl";
+                gpios = </* RESET    */ &crf 3
+                         /* NCPUHALT */ &apu 7
+                         /* VINITHI  */ &apu 11>;
+                gpio-names = "reset",
+                             "ncpuhalt",
+                             "vinithi";
 
                 memattr_s = <&hpps_memattr_cpu3_s>;
                 memattr_ns = <&hpps_memattr_cpu3_ns>;
@@ -401,8 +419,12 @@
                 arm,mp-affinity = <0x100>;
                 arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
-                gpios = <&crf 0x4>;
-                gpio-names = "rst_cntrl";
+                gpios = </* RESET    */ &crf 4
+                         /* NCPUHALT */ &apu1 4
+                         /* VINITHI  */ &apu1 8>;
+                gpio-names = "reset",
+                             "ncpuhalt",
+                             "vinithi";
 
                 memattr_s = <&hpps_memattr_cpu4_s>;
                 memattr_ns = <&hpps_memattr_cpu4_ns>;
@@ -426,8 +448,12 @@
                 arm,mp-affinity = <0x101>;
                 arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
-                gpios = <&crf 0x5>;
-                gpio-names = "rst_cntrl";
+                gpios = </* RESET    */ &crf 5
+                         /* NCPUHALT */ &apu1 5
+                         /* VINITHI  */ &apu1 9>;
+                gpio-names = "reset",
+                             "ncpuhalt",
+                             "vinithi";
 
                 memattr_s = <&hpps_memattr_cpu5_s>;
                 memattr_ns = <&hpps_memattr_cpu5_ns>;
@@ -450,8 +476,12 @@
                 arm,mp-affinity = <0x102>;
                 arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
-                gpios = <&crf 0x6>;
-                gpio-names = "rst_cntrl";
+                gpios = </* RESET    */ &crf 6
+                         /* NCPUHALT */ &apu1 6
+                         /* VINITHI  */ &apu1 10>;
+                gpio-names = "reset",
+                             "ncpuhalt",
+                             "vinithi";
 
                 memattr_s = <&hpps_memattr_cpu6_s>;
                 memattr_ns = <&hpps_memattr_cpu6_ns>;
@@ -474,8 +504,12 @@
                 arm,mp-affinity = <0x103>;
                 arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
-                gpios = <&crf 0x7>;
-                gpio-names = "rst_cntrl";
+                gpios = </* RESET    */ &crf 7
+                         /* NCPUHALT */ &apu1 7
+                         /* VINITHI  */ &apu1 11>;
+                gpio-names = "reset",
+                             "ncpuhalt",
+                             "vinithi";
 
                 memattr_s = <&hpps_memattr_cpu7_s>;
                 memattr_ns = <&hpps_memattr_cpu7_ns>;
