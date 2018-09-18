@@ -758,7 +758,7 @@
         };
     };
 
-    rpu_ctrl_bus_descend1 {
+    rpu_ctrl_bus_descend1 { /* levels enforce dependency (on RTPS CPU nodes) */
         compatible = "simple-bus";
         ranges ;
 
