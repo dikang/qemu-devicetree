@@ -140,8 +140,6 @@
         #priority-cells = <0>;
 
         trch_cpus {
-            #address-cells = <1>;
-
             trch_memattr_cpu: trch_memattr_cpu@0 {
                 compatible = "qemu:memory-transaction-attr";
                 secure = <1>;
@@ -179,7 +177,6 @@
         };
 
         rtps_cpus {
-            #address-cells = <1>;
 
 #define RTPS_CPU_PROPS                                 \
                 #interrupt-cells = <1>;                \
@@ -260,7 +257,6 @@
         };
 
         hpps_cpus {
-            #address-cells = <2>;
 
 #define HPPS_CPU_PROPS                                    \
                 #interrupt-cells = <1>;                   \
@@ -299,7 +295,7 @@
                 HPPS_CPU_PROPS
                 gdb-id = "HPPS Cortex-A53 #0";
 
-                reg = <0x0 0>;
+                reg = <0>;
                 arm,mp-affinity = <0>;
                 arm,rvbar = <HPPS_RESET_ADDR_PRIMARY_CPU>;
 
@@ -328,7 +324,7 @@
                 HPPS_CPU_PROPS
                 gdb-id = "HPPS Cortex-A53 #1";
 
-                reg = <0x0 1>;
+                reg = <1>;
                 arm,mp-affinity = <1>;
                 arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
@@ -357,7 +353,7 @@
                 HPPS_CPU_PROPS
                 gdb-id = "HPPS Cortex-A53 #2";
 
-                reg = <0x0 2>;
+                reg = <2>;
                 arm,mp-affinity = <2>;
                 arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
@@ -386,7 +382,7 @@
                 HPPS_CPU_PROPS
                 gdb-id = "HPPS Cortex-A53 #3";
 
-                reg = <0x0 3>;
+                reg = <3>;
                 arm,mp-affinity = <3>;
                 arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
@@ -415,7 +411,7 @@
                 HPPS_CPU_PROPS
                 gdb-id = "HPPS Cortex-A53 #4";
 
-                reg = <0x0 0x100>;
+                reg = <0x100>;
                 arm,mp-affinity = <0x100>;
                 arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
@@ -444,7 +440,7 @@
                 HPPS_CPU_PROPS
                 gdb-id = "HPPS Cortex-A53 #5";
 
-                reg = <0x0 0x101>;
+                reg = <0x101>;
                 arm,mp-affinity = <0x101>;
                 arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
@@ -472,7 +468,7 @@
                 HPPS_CPU_PROPS
                 gdb-id = "HPPS Cortex-A53 #6";
 
-                reg = <0x0 0x102>;
+                reg = <0x102>;
                 arm,mp-affinity = <0x102>;
                 arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
@@ -500,7 +496,7 @@
                 HPPS_CPU_PROPS
                 gdb-id = "HPPS Cortex-A53 #7";
 
-                reg = <0x0 0x103>;
+                reg = <0x103>;
                 arm,mp-affinity = <0x103>;
                 arm,rvbar = <HPPS_RESET_ADDR_SECONDARY_CPU>;
 
