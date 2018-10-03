@@ -1,4 +1,4 @@
-
+	
 /*
  * ZynqMP ARM include file
  *
@@ -153,15 +153,10 @@
 	arm,ccsidr1 = <0xf01fe019>;									\
 	arm,mp-affinity = <n>;								\
 	arm,id_pfr0 = <0x131>;										\
-	arm,rvbar = <0x00100000>;			\
+	arm,rvbar = <0x10000000>;			\
 	arm,reset_sctlr = <0x30c50838>;			\
-	arm,vbar = <0x00100000>;			\
-        arm,cfgperiphbase = <0xF9A00000>;		\
         arm,buildoptr= <0x00f00000>;		\
         arm,pinoptr= <0x00000000>;		\
-	arm,atcmregionr = <0x00000014>;			\
-	arm,btcmregionr = <0x00004014>;			\
-	arm,ctcmregionr = <0x00008014>;			\
 	#interrupt-cells = <1>;
 
 / {
@@ -492,14 +487,14 @@
 		ranges ;
 		container = <&amba>;
 		priority = <0xFFFFFFFF>; /* -1 */
-		gic: interrupt-controller@APU_GIC_DIST {
+		gic: interrupt-controller@F9000000 {
 			#address-cells = <0>;
 			#size-cells = <0>;
 			#interrupt-cells = <3>;
 			#gpio-cells = <0>;
 #ifdef HPSC_NEW_GIC
 			compatible = "arm,arm-gicv3";
-			reg = < BASE_ADDR(0xF9000000) 0x20000 0		/* GICD */
+			reg = < BASE_ADDR(0xF9000000) 0x10000 0		/* GICD */
 				BASE_ADDR(0xF9100000) 0x100000 0>;	/* GICR */
 			interrupt-controller ;
 			num-irq = <320>;
@@ -590,21 +585,35 @@
 			revision = <2>;
 #endif
 #ifdef HPSC_NEW_GIC
-			#redistributor-regions = <1>;
-/*			msi-controller;
-			mbi-ranges = <256 128>; 
-			gicits: gic-its@f9020000 {
-				compatible = "arm,gic-v3-its";
+/*			#redistributor-regions = <1>;
+			msi-controller;
+			mbi-ranges = <256 128>;  
+*/
+			gic-its@f9020000 {
+//				compatible = "arm,arm_gicv3_its";	// not recognized
+//				compatible = "arm,arm-gicv3-its-common";	// fail
+				compatible = "arm,arm-its-kvm";		// not recognized
 				msi-controller;
 				#msi-cells = <1>;
-				reg = <BASE_ADDR(0xf9020000) 0x20000 0>;
+//				reg = <0x0 0xf9020000 0 0x10000>;
 			};
-*/
 #else
 			map-stride = <ACPU_GIC_STRIDE>;
 			int-id = <0x0202143B>;
 #endif
 		};
+#ifdef HPSC_NEW_GIC
+/*
+		gic_its2:gic-its@f9030000 {
+//				compatible = "arm,arm_gicv3_its";	// not recognized  
+//				compatible = "arm,arm-its-kvm";		// not recognized 
+				compatible = "arm,arm-gicv3-its-common";		// fail
+				msi-controller;
+				#msi-cells = <1>;
+				reg = <0x0 0xf9030000 0 0x10000>;
+			};
+*/
+#endif
 #ifndef HPSC_NEW_GIC
 		/* Alias the GIC CPU registers every 4kB over 64kB */
 		zynqmp-gic-cpu-alias@0xf9021000 {
