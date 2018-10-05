@@ -194,8 +194,8 @@
                 arm,ccsidr1 = <0xf01fe019>;            \
                 arm,id_pfr0 = <0x131>;                 \
                 arm,reset_sctlr = <0x30c50838>;        \
-                arm,rvbar = <0x00000000>;              \
-                arm,vbar = <0x00000000>;               \
+                arm,rvbar = <0x60000000>;              \
+                arm,vbar = <0x60000000>;               \
                 arm,cfgperiphbase = <0xf9a00000>;      \
                 arm,buildoptr= <0x00f00000>;           \
                 arm,pinoptr= <0x00000000>;             \
